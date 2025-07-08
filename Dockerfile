@@ -1,3 +1,3 @@
-FROM openjdk:11
-COPY target/banking-0.0.1-SNAPSHOT.jar app.jar
+FROM openjdk:8-jdk-alpine
+COPY target/*.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
