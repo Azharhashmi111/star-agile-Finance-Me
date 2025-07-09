@@ -1,8 +1,6 @@
 package com.project.staragile.banking;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.prometheus.PrometheusMeterRegistry;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,10 +27,7 @@ public class BankingApplication {
     }
 
     @PostConstruct
-    public void initCustomMetric() {
-        if (meterRegistry instanceof PrometheusMeterRegistry) {
-            PrometheusMeterRegistry promRegistry = (PrometheusMeterRegistry) meterRegistry;
-            promRegistry.counter("custom_metric_initialized_total", "purpose", "init").increment();
-        }
+    public void initMetric() {
+        meterRegistry.counter("custom.metric.init", "env", "prod").increment();
     }
 }
