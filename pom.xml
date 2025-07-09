@@ -20,42 +20,43 @@
     <description>Banking Microservice Project for StarAgile DevOps Project</description>
 
     <properties>
-        <java.version>11</java.version> <!-- ✅ RECOMMENDED for Spring Boot 2.7.4 -->
+        <java.version>11</java.version>
     </properties>
 
     <dependencies>
-        <!-- Web & JPA -->
+        <!-- Web Starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Spring Data JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- H2 Database -->
+        <!-- H2 In-Memory Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Spring Actuator -->
+        <!-- Spring Boot Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- ✅ Micrometer Prometheus -->
+        <!-- Micrometer Prometheus Registry -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>1.9.3</version> <!-- ✅ ADD version compatible with Spring Boot 2.7.4 -->
+            <version>1.9.3</version>
         </dependency>
 
-        <!-- Testing -->
+        <!-- Testing Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -71,4 +72,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
