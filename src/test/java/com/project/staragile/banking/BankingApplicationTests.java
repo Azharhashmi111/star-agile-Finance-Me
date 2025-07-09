@@ -1,13 +1,34 @@
 package com.project.staragile.banking;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
-@SpringBootTest
-class BankingApplicationTests {
+import javax.annotation.PostConstruct;
 
-	@Test
-	void contextLoads() {
-	}
+@SpringBootApplication
+public class BankingApplication {
 
+    private final MeterRegistry meterRegistry;
+
+    public BankingApplication(MeterRegistry meterRegistry) {
+        this.meterRegistry = meterRegistry;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(BankingApplication.class, args);
+    }
+
+    @Bean
+    MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+        return registry -> registry.config().commonTags("application", "finance-world");
+    }
+
+    @PostConstruct
+    public void initCustomMetric() {
+        // 🔥 Ensures at least one metric is recorded, so /actuator/prometheus endpoint is initialized
+        meterRegistry.counter("custom.metric.init").increment();
+    }
 }
