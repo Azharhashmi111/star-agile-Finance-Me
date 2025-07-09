@@ -1,6 +1,9 @@
 package com.project.staragile.banking;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
+import io.micrometer.prometheus.PrometheusConfig;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +24,12 @@ public class BankingApplication {
         SpringApplication.run(BankingApplication.class, args);
     }
 
+    // ✅ Force Prometheus registry bean (fixes 404 in many edge cases)
+    @Bean
+    public PrometheusMeterRegistry prometheusMeterRegistry() {
+        return new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+    }
+
     @Bean
     MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
         return registry -> registry.config().commonTags("application", "finance-world");
@@ -28,7 +37,6 @@ public class BankingApplication {
 
     @PostConstruct
     public void initCustomMetric() {
-        // 🔥 Ensures at least one metric is recorded, so /actuator/prometheus endpoint is initialized
         meterRegistry.counter("custom.metric.init").increment();
     }
 }
