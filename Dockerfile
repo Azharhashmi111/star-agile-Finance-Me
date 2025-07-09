@@ -1,11 +1,10 @@
-# Use a lightweight Java 8 base image
-FROM openjdk:8-jdk-alpine
+FROM openjdk:11
 
-# Copy the built JAR file into the image
+# Copy JAR file
 COPY target/*.jar /app.jar
 
-# ✅ Copy application.properties into container
+# ✅ Copy external config
 COPY src/main/resources/application.properties /application.properties
 
-# ✅ Run app and point to external config file explicitly
+# ✅ Use this entrypoint so Spring Boot uses correct config file
 ENTRYPOINT ["java", "-jar", "/app.jar", "--spring.config.location=file:/application.properties"]
