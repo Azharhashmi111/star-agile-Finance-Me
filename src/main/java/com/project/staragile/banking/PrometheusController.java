@@ -1,44 +1,20 @@
 package com.project.staragile.banking;
 
-import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
-import io.micrometer.prometheus.PrometheusConfig;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+@RestController
+public class PrometheusController {
 
-import javax.annotation.PostConstruct;
+    private final PrometheusMeterRegistry prometheusMeterRegistry;
 
-@SpringBootApplication
-public class BankingApplication {
-
-    private final MeterRegistry meterRegistry;
-
-    public BankingApplication(MeterRegistry meterRegistry) {
-        this.meterRegistry = meterRegistry;
+    public PrometheusController(PrometheusMeterRegistry prometheusMeterRegistry) {
+        this.prometheusMeterRegistry = prometheusMeterRegistry;
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(BankingApplication.class, args);
-    }
-
-    @Bean
-    public PrometheusMeterRegistry prometheusMeterRegistry() {
-        return new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
-    }
-
-    @Bean
-    MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
-        return registry -> registry.config().commonTags("application", "finance-world");
-    }
-
-    @PostConstruct
-    public void initCustomMetric() {
-        if (meterRegistry instanceof PrometheusMeterRegistry) {
-            PrometheusMeterRegistry promRegistry = (PrometheusMeterRegistry) meterRegistry;
-            promRegistry.counter("custom_metric_initialized_total", "purpose", "init").increment();
-        }
+    @GetMapping("/actuator/prometheus")
+    public String scrape() {
+        return prometheusMeterRegistry.scrape();
     }
 }
